@@ -1,0 +1,77 @@
+// script.js
+const display = document.getElementById("display");
+const buttons = Array.from(document.getElementsByTagName("button"));
+
+let currentNum = "";
+let prevNum = "";
+let operator = "";
+let result = "";
+
+const clearDisplay = () => {
+  currentNum = "";
+  prevNum = "";
+  operator = "";
+  result = "";
+  display.value = "";
+};
+
+const appendToDisplay = (value) => {
+  display.value += value;
+};
+
+const calculate = () => {
+  const num1 = parseFloat(prevNum);
+  const num2 = parseFloat(currentNum);
+  let calculation;
+
+  switch (operator) {
+    case "+":
+      calculation = num1 + num2;
+      break;
+    case "-":
+      calculation = num1 - num2;
+      break;
+    case "*":
+      calculation = num1 * num2;
+      break;
+    case "/":
+      calculation = num1 / num2;
+      break;
+    default:
+      calculation = currentNum;
+  }
+
+  result = calculation;
+  currentNum = calculation.toString();
+  operator = "";
+  prevNum = "";
+  display.value = currentNum;
+};
+
+buttons.map((button) => {
+  button.addEventListener("click", (e) => {
+    const buttonValue = e.target.innerText;
+
+    if (buttonValue === "C") {
+      clearDisplay();
+    } else if (buttonValue === "+" || buttonValue === "-" || buttonValue === "*" || buttonValue === "/") {
+      if (prevNum && currentNum && operator) {
+        calculate();
+      }
+      operator = buttonValue;
+      prevNum = currentNum;
+      currentNum = "";
+    } else if (buttonValue === ".") {
+      if (!currentNum.includes(".")) {
+        currentNum += ".";
+      }
+    } else if (buttonValue === "=") {
+      if (prevNum && currentNum && operator) {
+        calculate();
+      }
+    } else {
+      appendToDisplay(buttonValue);
+      currentNum = display.value;
+    }
+  });
+});
